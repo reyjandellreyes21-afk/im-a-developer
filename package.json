@@ -1,0 +1,19 @@
+{
+  "name": "im-a-developer",
+  "version": "1.0.0",
+  "description": "Portfolio site with Node.js contact API and MySQL storage.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.0"
+  }
+}
