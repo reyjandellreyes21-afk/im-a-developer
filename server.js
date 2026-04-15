@@ -11,13 +11,13 @@ app.use(express.json());
 app.use(express.static(__dirname));
 
 const ensureContactTable = async () => {
-  await pool.execute(
+  await pool.query(
     `CREATE TABLE IF NOT EXISTS contact_messages (
-      id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(120) NOT NULL,
-      email VARCHAR(180) NOT NULL,
+      id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
       message TEXT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMPTZ DEFAULT NOW()
     )`
   );
 };
@@ -43,9 +43,9 @@ app.post("/api/contact", async (req, res) => {
   }
 
   try {
-    await pool.execute(
+    await pool.query(
       `INSERT INTO contact_messages (name, email, message)
-       VALUES (?, ?, ?)`,
+       VALUES ($1, $2, $3)`,
       [name, email, message]
     );
     res.status(201).json({ success: true });

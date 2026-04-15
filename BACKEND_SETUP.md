@@ -1,11 +1,21 @@
-# Node.js Contact Backend Setup
+# Node.js Contact Backend Setup (Supabase Postgres)
 
 1. Create your env file:
    - Copy `.env.example` to `.env`
-   - Update DB credentials
+   - Set `DATABASE_URL` from Supabase Connection string (Session pooler URI)
 
-2. Create database and table:
-   - Open MySQL and run `database.sql`
+2. Create database table:
+   - Open Supabase SQL Editor and run:
+
+```sql
+create table if not exists contact_messages (
+  id bigint generated always as identity primary key,
+  name text not null,
+  email text not null,
+  message text not null,
+  created_at timestamptz default now()
+);
+```
 
 3. Start server:
    - `npm install`
