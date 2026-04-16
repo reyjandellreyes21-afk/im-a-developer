@@ -6,7 +6,6 @@ const yearEl = document.getElementById("year");
 const navbar = document.querySelector(".navbar");
 const typedTextEl = document.getElementById("typedText");
 const themeToggle = document.getElementById("themeToggle");
-const themeIcon = themeToggle ? themeToggle.querySelector(".theme-icon") : null;
 const revealTargets = document.querySelectorAll(".reveal-target");
 const contactForm = document.getElementById("contactForm");
 const contactSubmitBtn = document.getElementById("contactSubmitBtn");
@@ -19,9 +18,6 @@ if (yearEl) {
 
 const setTheme = (theme) => {
   document.body.classList.toggle("light-theme", theme === "light");
-  if (themeIcon) {
-    themeIcon.textContent = theme === "light" ? "Dark" : "Light";
-  }
   if (themeToggle) {
     themeToggle.setAttribute("aria-label", `Switch to ${theme === "light" ? "dark" : "light"} mode`);
   }
@@ -184,7 +180,17 @@ const isLocalHost =
   window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1" ||
   window.location.protocol === "file:";
-const API_BASE_URL = isLocalHost ? "http://localhost:3000" : "";
+
+const metaApiBase = document.querySelector('meta[name="portfolio-api-base"]')?.getAttribute("content");
+const trimmedMeta =
+  typeof metaApiBase === "string" ? metaApiBase.trim().replace(/\/$/, "") : "";
+
+const API_BASE_URL =
+  trimmedMeta.length > 0
+    ? trimmedMeta
+    : isLocalHost
+      ? "http://localhost:3000"
+      : "";
 
 if (contactForm && contactFeedback) {
   contactForm.addEventListener("submit", async (event) => {
@@ -247,5 +253,124 @@ if (contactForm && contactFeedback) {
         contactSubmitBtn.textContent = "Send Message";
       }
     }
+  });
+}
+
+const GITHUB_USERNAME = "reyjandellreyes21-afk";
+const githubFeed = document.getElementById("githubFeed");
+const githubStatus = document.getElementById("githubStatus");
+const githubRefreshBtn = document.getElementById("githubRefreshBtn");
+
+const repoName = (ev) => (typeof ev.repo?.name === "string" ? ev.repo.name : "repository");
+
+const repoUrl = (ev) => {
+  const name = repoName(ev);
+  return name.includes("/") ? `https://github.com/${name}` : "https://github.com/";
+};
+
+const formatEventSummary = (ev) => {
+  const repo = repoName(ev);
+  switch (ev.type) {
+    case "PushEvent":
+      return `Pushed to ${repo}`;
+    case "CreateEvent": {
+      const ref = ev.payload?.ref_type ?? "resource";
+      return `Created ${ref} in ${repo}`;
+    }
+    case "PullRequestEvent":
+      return `Pull request ${ev.payload?.action ?? "updated"} on ${repo}`;
+    case "IssuesEvent":
+      return `Issue ${ev.payload?.action ?? "updated"} on ${repo}`;
+    case "ForkEvent":
+      return `Forked ${repo}`;
+    case "WatchEvent":
+      return `Starred ${repo}`;
+    case "ReleaseEvent":
+      return `Release activity on ${repo}`;
+    case "DeleteEvent":
+      return `Deleted ${ev.payload?.ref_type ?? "ref"} in ${repo}`;
+    case "PublicEvent":
+      return `Open-sourced ${repo}`;
+    default:
+      return `${ev.type.replace("Event", "")} on ${repo}`;
+  }
+};
+
+const loadGitHubActivity = async () => {
+  if (!githubFeed) return;
+
+  githubFeed.replaceChildren();
+  if (githubStatus) {
+    githubStatus.textContent = "Loading recent public events…";
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.github.com/users/${encodeURIComponent(GITHUB_USERNAME)}/events/public?per_page=10`
+    );
+
+    if (response.status === 403) {
+      throw new Error("GitHub rate limit reached. Try again in a few minutes.");
+    }
+
+    if (!response.ok) {
+      throw new Error("Could not load GitHub activity.");
+    }
+
+    const events = await response.json();
+    if (!Array.isArray(events) || events.length === 0) {
+      if (githubStatus) {
+        githubStatus.textContent = "No recent public events to show.";
+      }
+      return;
+    }
+
+    if (githubStatus) {
+      githubStatus.textContent = "";
+    }
+
+    events.slice(0, 8).forEach((ev) => {
+      const item = document.createElement("li");
+
+      const typeEl = document.createElement("div");
+      typeEl.className = "github-feed-type";
+      typeEl.textContent = ev.type.replace("Event", "").toUpperCase() || "EVENT";
+
+      const summaryEl = document.createElement("div");
+      summaryEl.className = "github-feed-summary";
+      summaryEl.textContent = formatEventSummary(ev);
+
+      const metaEl = document.createElement("div");
+      metaEl.className = "github-feed-meta";
+      const created = ev.created_at ? new Date(ev.created_at) : null;
+      const dateStr = created
+        ? created.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
+        : "";
+      const link = document.createElement("a");
+      link.href = repoUrl(ev);
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      link.textContent = repoName(ev);
+      metaEl.append("Repository: ", link);
+      if (dateStr) {
+        metaEl.append(" · ", dateStr);
+      }
+
+      item.append(typeEl, summaryEl, metaEl);
+      githubFeed.appendChild(item);
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Failed to load GitHub activity.";
+    if (githubStatus) {
+      githubStatus.textContent = message;
+    }
+  }
+};
+
+loadGitHubActivity();
+
+if (githubRefreshBtn) {
+  githubRefreshBtn.addEventListener("click", () => {
+    loadGitHubActivity();
   });
 }

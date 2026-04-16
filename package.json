@@ -1,7 +1,7 @@
 {
   "name": "im-a-developer",
   "version": "1.0.0",
-  "description": "Portfolio site with Node.js contact API and MySQL storage.",
+  "description": "Portfolio with Node.js contact API and PostgreSQL (Supabase-compatible).",
   "main": "server.js",
   "scripts": {
     "dev": "node server.js",
