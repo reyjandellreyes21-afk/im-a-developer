@@ -7,9 +7,14 @@ const navbar = document.querySelector(".navbar");
 const typedTextEl = document.getElementById("typedText");
 const themeToggle = document.getElementById("themeToggle");
 const revealTargets = document.querySelectorAll(".reveal-target");
+const faqQuestions = document.querySelectorAll(".faq-question");
 const contactForm = document.getElementById("contactForm");
 const contactSubmitBtn = document.getElementById("contactSubmitBtn");
 const contactFeedback = document.getElementById("contactFeedback");
+const tabProjects = document.getElementById("tabProjects");
+const tabStack = document.getElementById("tabStack");
+const panelProjects = document.getElementById("panelProjects");
+const panelStack = document.getElementById("panelStack");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 if (yearEl) {
@@ -19,7 +24,10 @@ if (yearEl) {
 const setTheme = (theme) => {
   document.body.classList.toggle("light-theme", theme === "light");
   if (themeToggle) {
-    themeToggle.setAttribute("aria-label", `Switch to ${theme === "light" ? "dark" : "light"} mode`);
+    const nextMode = theme === "light" ? "dark" : "light";
+    const label = `Switch to ${nextMode} mode`;
+    themeToggle.setAttribute("aria-label", label);
+    themeToggle.setAttribute("data-tooltip", label);
   }
 };
 
@@ -106,6 +114,41 @@ const sectionObserver = new IntersectionObserver(
 
 sections.forEach((section) => sectionObserver.observe(section));
 
+if (tabProjects && tabStack && panelProjects && panelStack) {
+  let tabPanelAnimReady = false;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      tabPanelAnimReady = true;
+    });
+  });
+
+  const setActiveTab = (target) => {
+    const showProjects = target === "projects";
+    tabProjects.classList.toggle("is-active", showProjects);
+    tabProjects.setAttribute("aria-selected", String(showProjects));
+    panelProjects.hidden = !showProjects;
+
+    tabStack.classList.toggle("is-active", !showProjects);
+    tabStack.setAttribute("aria-selected", String(!showProjects));
+    panelStack.hidden = showProjects;
+
+    const visible = showProjects ? panelProjects : panelStack;
+    if (!prefersReducedMotion && tabPanelAnimReady && visible) {
+      visible.classList.remove("tab-panel-enter");
+      void visible.offsetWidth;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          visible.classList.add("tab-panel-enter");
+        });
+      });
+    }
+  };
+
+  tabProjects.addEventListener("click", () => setActiveTab("projects"));
+  tabStack.addEventListener("click", () => setActiveTab("stack"));
+  setActiveTab("projects");
+}
+
 if (prefersReducedMotion) {
   revealTargets.forEach((target) => target.classList.add("in-view"));
 } else {
@@ -128,9 +171,9 @@ if (prefersReducedMotion) {
 
 if (typedTextEl) {
   const phrases = [
-    "Programmer, Web Designer, and IT Support.",
-    "Building better systems with clean, modern web solutions.",
-    "Ready for a more challenging software development role.",
+    "Full-stack developer focused on reliable, user-centered web applications.",
+    "Building clean and dependable systems for real operational use.",
+    "Bridging frontend quality, practical backend work, and support execution.",
   ];
   if (prefersReducedMotion) {
     typedTextEl.textContent = phrases[0];
@@ -146,10 +189,10 @@ if (typedTextEl) {
       typedTextEl.textContent = activePhrase.slice(0, letterIndex);
       if (letterIndex === activePhrase.length) {
         deleting = true;
-        setTimeout(typeLoop, 1400);
+        setTimeout(typeLoop, 1800);
         return;
       }
-      setTimeout(typeLoop, 78);
+      setTimeout(typeLoop, 64);
       return;
     }
 
@@ -158,15 +201,24 @@ if (typedTextEl) {
     if (letterIndex === 0) {
       deleting = false;
       phraseIndex = (phraseIndex + 1) % phrases.length;
-      setTimeout(typeLoop, 380);
+      setTimeout(typeLoop, 420);
       return;
     }
-    setTimeout(typeLoop, 42);
+    setTimeout(typeLoop, 34);
   };
 
   typeLoop();
   }
 }
+
+faqQuestions.forEach((button) => {
+  button.addEventListener("click", () => {
+    const item = button.closest(".faq-item");
+    if (!item) return;
+    const isOpen = item.classList.toggle("open");
+    button.setAttribute("aria-expanded", String(isOpen));
+  });
+});
 
 const onScroll = () => {
   if (!navbar) return;
@@ -193,6 +245,18 @@ const API_BASE_URL =
       : "";
 
 if (contactForm && contactFeedback) {
+  const pulseContactFeedback = (kind) => {
+    if (prefersReducedMotion) return;
+    contactFeedback.classList.remove("feedback-shake", "feedback-pop");
+    void contactFeedback.offsetWidth;
+    if (kind === "error") {
+      contactFeedback.classList.add("feedback-shake");
+    }
+    if (kind === "success") {
+      contactFeedback.classList.add("feedback-pop");
+    }
+  };
+
   contactForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -207,6 +271,7 @@ if (contactForm && contactFeedback) {
       contactFeedback.textContent = "Please fill out all fields.";
       contactFeedback.classList.add("is-error");
       contactFeedback.classList.remove("is-success");
+      pulseContactFeedback("error");
       return;
     }
 
@@ -216,7 +281,7 @@ if (contactForm && contactFeedback) {
     }
 
     contactFeedback.textContent = "";
-    contactFeedback.classList.remove("is-error", "is-success");
+    contactFeedback.classList.remove("is-error", "is-success", "feedback-shake", "feedback-pop");
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/contact`, {
@@ -243,10 +308,12 @@ if (contactForm && contactFeedback) {
       contactForm.reset();
       contactFeedback.textContent = "Message sent successfully. Thank you!";
       contactFeedback.classList.add("is-success");
+      pulseContactFeedback("success");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to send message. Please try again.";
       contactFeedback.textContent = message;
       contactFeedback.classList.add("is-error");
+      pulseContactFeedback("error");
     } finally {
       if (contactSubmitBtn) {
         contactSubmitBtn.disabled = false;
