@@ -4,17 +4,12 @@ const navItems = [...document.querySelectorAll(".section-links a")];
 const sections = [...document.querySelectorAll("main section[id]")];
 const yearEl = document.getElementById("year");
 const navbar = document.querySelector(".navbar");
-const typedTextEl = document.getElementById("typedText");
 const themeToggle = document.getElementById("themeToggle");
 const revealTargets = document.querySelectorAll(".reveal-target");
 const faqQuestions = document.querySelectorAll(".faq-question");
 const contactForm = document.getElementById("contactForm");
 const contactSubmitBtn = document.getElementById("contactSubmitBtn");
 const contactFeedback = document.getElementById("contactFeedback");
-const tabProjects = document.getElementById("tabProjects");
-const tabStack = document.getElementById("tabStack");
-const panelProjects = document.getElementById("panelProjects");
-const panelStack = document.getElementById("panelStack");
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 if (yearEl) {
@@ -114,41 +109,6 @@ const sectionObserver = new IntersectionObserver(
 
 sections.forEach((section) => sectionObserver.observe(section));
 
-if (tabProjects && tabStack && panelProjects && panelStack) {
-  let tabPanelAnimReady = false;
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      tabPanelAnimReady = true;
-    });
-  });
-
-  const setActiveTab = (target) => {
-    const showProjects = target === "projects";
-    tabProjects.classList.toggle("is-active", showProjects);
-    tabProjects.setAttribute("aria-selected", String(showProjects));
-    panelProjects.hidden = !showProjects;
-
-    tabStack.classList.toggle("is-active", !showProjects);
-    tabStack.setAttribute("aria-selected", String(!showProjects));
-    panelStack.hidden = showProjects;
-
-    const visible = showProjects ? panelProjects : panelStack;
-    if (!prefersReducedMotion && tabPanelAnimReady && visible) {
-      visible.classList.remove("tab-panel-enter");
-      void visible.offsetWidth;
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          visible.classList.add("tab-panel-enter");
-        });
-      });
-    }
-  };
-
-  tabProjects.addEventListener("click", () => setActiveTab("projects"));
-  tabStack.addEventListener("click", () => setActiveTab("stack"));
-  setActiveTab("projects");
-}
-
 if (prefersReducedMotion) {
   revealTargets.forEach((target) => target.classList.add("in-view"));
 } else {
@@ -169,48 +129,6 @@ if (prefersReducedMotion) {
   revealTargets.forEach((target) => revealObserver.observe(target));
 }
 
-if (typedTextEl) {
-  const phrases = [
-    "Full-stack developer focused on reliable, user-centered web applications.",
-    "Building clean and dependable systems for real operational use.",
-    "Bridging frontend quality, practical backend work, and support execution.",
-  ];
-  if (prefersReducedMotion) {
-    typedTextEl.textContent = phrases[0];
-  } else {
-  let phraseIndex = 0;
-  let letterIndex = 0;
-  let deleting = false;
-
-  const typeLoop = () => {
-    const activePhrase = phrases[phraseIndex];
-    if (!deleting) {
-      letterIndex += 1;
-      typedTextEl.textContent = activePhrase.slice(0, letterIndex);
-      if (letterIndex === activePhrase.length) {
-        deleting = true;
-        setTimeout(typeLoop, 1800);
-        return;
-      }
-      setTimeout(typeLoop, 64);
-      return;
-    }
-
-    letterIndex -= 1;
-    typedTextEl.textContent = activePhrase.slice(0, letterIndex);
-    if (letterIndex === 0) {
-      deleting = false;
-      phraseIndex = (phraseIndex + 1) % phrases.length;
-      setTimeout(typeLoop, 420);
-      return;
-    }
-    setTimeout(typeLoop, 34);
-  };
-
-  typeLoop();
-  }
-}
-
 faqQuestions.forEach((button) => {
   button.addEventListener("click", () => {
     const item = button.closest(".faq-item");
@@ -228,21 +146,24 @@ const onScroll = () => {
 window.addEventListener("scroll", onScroll, { passive: true });
 onScroll();
 
-const isLocalHost =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1" ||
-  window.location.protocol === "file:";
+const metaSupabaseUrl = document
+  .querySelector('meta[name="portfolio-supabase-url"]')
+  ?.getAttribute("content");
+const metaSupabaseAnonKey = document
+  .querySelector('meta[name="portfolio-supabase-anon-key"]')
+  ?.getAttribute("content");
+const metaSupabaseTable = document
+  .querySelector('meta[name="portfolio-supabase-table"]')
+  ?.getAttribute("content");
 
-const metaApiBase = document.querySelector('meta[name="portfolio-api-base"]')?.getAttribute("content");
-const trimmedMeta =
-  typeof metaApiBase === "string" ? metaApiBase.trim().replace(/\/$/, "") : "";
-
-const API_BASE_URL =
-  trimmedMeta.length > 0
-    ? trimmedMeta
-    : isLocalHost
-      ? "http://localhost:3000"
-      : "";
+const SUPABASE_URL =
+  typeof metaSupabaseUrl === "string" ? metaSupabaseUrl.trim().replace(/\/$/, "") : "";
+const SUPABASE_ANON_KEY =
+  typeof metaSupabaseAnonKey === "string" ? metaSupabaseAnonKey.trim() : "";
+const SUPABASE_TABLE =
+  typeof metaSupabaseTable === "string" && metaSupabaseTable.trim()
+    ? metaSupabaseTable.trim()
+    : "contact_messages";
 
 if (contactForm && contactFeedback) {
   const pulseContactFeedback = (kind) => {
@@ -264,10 +185,11 @@ if (contactForm && contactFeedback) {
     const payload = {
       name: String(formData.get("name") || "").trim(),
       email: String(formData.get("email") || "").trim(),
+      subject: String(formData.get("subject") || "").trim(),
       message: String(formData.get("message") || "").trim(),
     };
 
-    if (!payload.name || !payload.email || !payload.message) {
+    if (!payload.name || !payload.email || !payload.subject || !payload.message) {
       contactFeedback.textContent = "Please fill out all fields.";
       contactFeedback.classList.add("is-error");
       contactFeedback.classList.remove("is-success");
@@ -284,20 +206,30 @@ if (contactForm && contactFeedback) {
     contactFeedback.classList.remove("is-error", "is-success", "feedback-shake", "feedback-pop");
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/contact`, {
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        throw new Error("Contact form is not configured yet. Please add Supabase credentials.");
+      }
+
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/${encodeURIComponent(SUPABASE_TABLE)}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          Prefer: "return=minimal",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify([payload]),
       });
 
       if (!response.ok) {
-        let errorMessage = "Request failed";
+        let errorMessage = "Failed to save your message.";
         try {
           const errorData = await response.json();
-          if (typeof errorData?.error === "string" && errorData.error.trim()) {
-            errorMessage = errorData.error;
+          const details = [errorData?.message, errorData?.details, errorData?.hint]
+            .filter((value) => typeof value === "string" && value.trim())
+            .join(" ");
+          if (details) {
+            errorMessage = details;
           }
         } catch (_error) {
           // Keep generic message if response body is not JSON.
@@ -441,3 +373,19 @@ if (githubRefreshBtn) {
     loadGitHubActivity();
   });
 }
+
+document.querySelectorAll(".timeline-expand").forEach((btn) => {
+  const panelId = btn.getAttribute("aria-controls");
+  if (!panelId) return;
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+
+  btn.addEventListener("click", () => {
+    const isOpen = btn.getAttribute("aria-expanded") === "true";
+    const next = !isOpen;
+    btn.setAttribute("aria-expanded", String(next));
+    panel.classList.toggle("is-open", next);
+    panel.setAttribute("aria-hidden", next ? "false" : "true");
+    btn.setAttribute("aria-label", next ? "Hide responsibilities" : "Show responsibilities");
+  });
+});
