@@ -185,20 +185,17 @@ if (contactForm && contactFeedback) {
     const payload = {
       name: String(formData.get("name") || "").trim(),
       email: String(formData.get("email") || "").trim(),
+      subject: String(formData.get("subject") || "").trim(),
       message: String(formData.get("message") || "").trim(),
     };
-    const subject = String(formData.get("subject") || "").trim();
 
-    if (!payload.name || !payload.email || !subject || !payload.message) {
+    if (!payload.name || !payload.email || !payload.subject || !payload.message) {
       contactFeedback.textContent = "Please fill out all fields.";
       contactFeedback.classList.add("is-error");
       contactFeedback.classList.remove("is-success");
       pulseContactFeedback("error");
       return;
     }
-
-    // Keep compatibility with tables that do not have a dedicated "subject" column.
-    payload.message = `Subject: ${subject}\n\n${payload.message}`;
 
     if (contactSubmitBtn) {
       contactSubmitBtn.disabled = true;
