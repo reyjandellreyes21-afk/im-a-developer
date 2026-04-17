@@ -1432,7 +1432,7 @@ body.light-theme .hero-float-box {
 }
 
 #skills .skills-more {
-  margin-top: 1.25rem;
+  margin-top: calc(1.25rem + 50px);
   text-align: center;
 }
 
