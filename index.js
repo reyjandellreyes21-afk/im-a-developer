@@ -389,3 +389,23 @@ document.querySelectorAll(".timeline-expand").forEach((btn) => {
     btn.setAttribute("aria-label", next ? "Hide responsibilities" : "Show responsibilities");
   });
 });
+
+document.querySelectorAll(".project-expand").forEach((btn) => {
+  const panelId = btn.getAttribute("aria-controls");
+  if (!panelId) return;
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const labelSpan = btn.querySelector("span");
+
+  btn.addEventListener("click", () => {
+    const isOpen = btn.getAttribute("aria-expanded") === "true";
+    const next = !isOpen;
+    btn.setAttribute("aria-expanded", String(next));
+    panel.classList.toggle("is-open", next);
+    panel.setAttribute("aria-hidden", next ? "false" : "true");
+    btn.setAttribute("aria-label", next ? "Hide project details and tools" : "Show project details and tools");
+    if (labelSpan) {
+      labelSpan.textContent = next ? "Hide details and tools" : "Show details and tools";
+    }
+  });
+});
