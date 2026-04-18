@@ -245,11 +245,14 @@ section[id] {
 }
 
 #experience .container > h2,
-#experience .container > .section-subtext {
+#experience .container > .section-subtext,
+#projects .container > h2,
+#projects .container > .section-subtext {
   text-align: center;
 }
 
-#experience .container > .section-subtext {
+#experience .container > .section-subtext,
+#projects .container > .section-subtext {
   margin-inline: auto;
 }
 
@@ -2049,55 +2052,6 @@ body.light-theme .stack-chip-fallback {
   margin-bottom: 0.72rem;
 }
 
-.project-expand {
-  display: none;
-  align-items: center;
-  gap: 0.45rem;
-  width: fit-content;
-  margin: 0.1rem 0 0.3rem;
-  padding: 0.28rem 0.6rem;
-  border-radius: 999px;
-  border: 1px solid color-mix(in srgb, var(--border) 72%, transparent 28%);
-  background: color-mix(in srgb, var(--card) 88%, transparent 12%);
-  color: color-mix(in srgb, var(--text) 86%, var(--muted) 14%);
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: border-color var(--ease), box-shadow var(--ease), color var(--ease), transform var(--ease);
-}
-
-.project-expand:hover {
-  border-color: color-mix(in srgb, var(--accent) 50%, var(--border) 50%);
-  color: var(--text);
-}
-
-.project-expand:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent) 68%, transparent 32%);
-  outline-offset: 2px;
-}
-
-.project-expand-icon {
-  transition: transform var(--ease);
-}
-
-.project-expand[aria-expanded="true"] .project-expand-icon {
-  transform: rotate(180deg);
-}
-
-.project-details {
-  display: grid;
-  gap: 0.35rem;
-  max-height: none;
-  opacity: 1;
-  overflow: visible;
-  transition: none;
-}
-
-.project-details.is-open {
-  max-height: none;
-  opacity: 1;
-}
-
 .project-meta-list {
   margin: 0;
   padding-left: 1.05rem;
@@ -2138,6 +2092,41 @@ body.light-theme .stack-chip-fallback {
 .project-tags i {
   font-size: 0.9rem;
   line-height: 1;
+  flex-shrink: 0;
+}
+
+#projects .project-tags span {
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+  color: color-mix(in srgb, var(--accent) 72%, var(--text) 28%);
+}
+
+body.light-theme #projects .project-tags span {
+  border-color: color-mix(in srgb, var(--accent) 38%, var(--border) 62%);
+  color: color-mix(in srgb, var(--accent) 55%, var(--text) 45%);
+}
+
+body:not(.light-theme) #projects .project-tags span.project-tag-icon-mono i[class*="devicon-"] {
+  filter: brightness(0) invert(1);
+}
+
+body.light-theme #projects .project-tags span.project-tag-icon-mono i[class*="devicon-"] {
+  filter: brightness(0);
+}
+
+#projects .project-tags span.project-tag-icon-mono .stack-chip-fallback {
+  min-width: 1.15rem;
+  height: 1.15rem;
+  font-size: 0.48rem;
+  border: none;
+  background: transparent;
+}
+
+body:not(.light-theme) #projects .project-tags span.project-tag-icon-mono .stack-chip-fallback {
+  color: #fff;
+}
+
+body.light-theme #projects .project-tags span.project-tag-icon-mono .stack-chip-fallback {
+  color: #000;
 }
 
 .project-links {
