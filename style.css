@@ -2207,46 +2207,51 @@ body.light-theme .stack-chip-fallback {
   min-height: 40px;
   padding: 0.5rem 1rem;
   border-radius: 999px;
-  border: 1px solid #30d9d2;
+  border: 1px solid color-mix(in srgb, var(--accent) 58%, var(--border) 42%);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: #e9fbff;
-  background: #060f1d;
-  transition: transform var(--ease), border-color var(--ease), box-shadow var(--ease), background-color var(--ease);
+  color: var(--text);
+  background: color-mix(in srgb, var(--bg-soft) 62%, var(--card) 38%);
+  transition: transform var(--ease), border-color var(--ease), box-shadow var(--ease), background-color var(--ease), color var(--ease);
 }
 
 .project-links a:hover {
   transform: translateY(-2px);
-  border-color: #52ebe3;
-  box-shadow: 0 10px 24px rgba(22, 228, 220, 0.2);
+  border-color: color-mix(in srgb, var(--accent) 72%, var(--border) 28%);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent 82%);
 }
 
 .project-links a:first-child {
-  background: linear-gradient(135deg, #40e9e1, #2fd8d1);
+  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent-2) 88%, var(--accent) 12%));
   border-color: transparent;
   color: #04232f;
-  box-shadow: 0 10px 24px rgba(43, 223, 216, 0.35);
+  box-shadow: var(--shadow-primary);
 }
 
 .project-links a:first-child:hover {
-  box-shadow: 0 14px 26px rgba(43, 223, 216, 0.45);
+  box-shadow: 0 14px 26px color-mix(in srgb, var(--accent) 35%, transparent 65%);
 }
 
-/* Keep the second Featured Work card button combo explicit. */
-.projects-grid .project-card:nth-of-type(2) .project-links a,
-.projects-grid .project-card:nth-of-type(2) .project-links a:visited {
-  border: 1px solid #30d9d2;
-  color: #e9fbff;
-  background: #060f1d;
+body.light-theme .project-links a:not(:first-child),
+body.light-theme .project-links a:not(:first-child):visited {
+  color: var(--text);
+  background: color-mix(in srgb, var(--card) 94%, var(--accent) 6%);
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
 }
 
-.projects-grid .project-card:nth-of-type(2) .project-links a:first-child,
-.projects-grid .project-card:nth-of-type(2) .project-links a:first-child:visited {
-  background: linear-gradient(135deg, #40e9e1, #2fd8d1);
-  border-color: transparent;
-  color: #04232f;
-  box-shadow: 0 10px 24px rgba(43, 223, 216, 0.35);
+body.light-theme .project-links a:not(:first-child):hover {
+  border-color: color-mix(in srgb, var(--accent) 58%, var(--border) 42%);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--accent) 16%, transparent 84%);
+}
+
+body.light-theme .project-links a:first-child,
+body.light-theme .project-links a:first-child:visited {
+  color: #071018;
+}
+
+body.light-theme .project-links a:first-child:hover {
+  box-shadow: 0 14px 26px color-mix(in srgb, var(--accent) 28%, transparent 72%);
 }
 
 .section-saas {
@@ -3007,6 +3012,11 @@ body.light-theme #experience .timeline-logo-box {
   flex-shrink: 0;
 }
 
+.contact-icon svg,
+.contact-icon i {
+  color: inherit;
+}
+
 .contact-icon svg {
   width: 1rem;
   height: 1rem;
@@ -3014,6 +3024,31 @@ body.light-theme #experience .timeline-logo-box {
 
 .contact-icon i {
   font-size: 1rem;
+}
+
+/* Beat :visited link color so SVG / devicons keep correct ink on the accent chip */
+a.contact-social-link .contact-icon,
+a.contact-social-link:visited .contact-icon {
+  color: #00131a;
+}
+
+.contact-card .contact-icon [class*="devicon-"] {
+  color: inherit !important;
+}
+
+body.light-theme .contact-icon {
+  border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--accent) 36%, var(--card) 64%),
+    color-mix(in srgb, var(--accent-2) 34%, var(--card-soft) 66%)
+  );
+  color: #071018;
+}
+
+body.light-theme a.contact-social-link .contact-icon,
+body.light-theme a.contact-social-link:visited .contact-icon {
+  color: #071018;
 }
 
 .contact-item-label {
