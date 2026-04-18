@@ -1449,96 +1449,8 @@ body.light-theme .hero-float-box {
   margin-top: 1.5rem;
 }
 
-.section-journey .timeline-item h3,
-.section-journey .edu-card h3 {
+.section-journey .timeline-item h3 {
   margin-top: 0.35rem;
-}
-
-.timeline-range {
-  font-size: 0.78rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--accent) 52%, var(--muted) 48%);
-  font-weight: 700;
-  margin: 0 0 0.2rem;
-}
-
-.journey-subhead {
-  font-size: clamp(1.2rem, 2.4vw, 1.45rem);
-  margin: var(--space-xl) 0 var(--space-md);
-  letter-spacing: -0.02em;
-}
-
-.section-activity .section-subtext.activity-sub {
-  margin-bottom: 0;
-}
-
-.activity-header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--space-md) var(--space-lg);
-  margin-bottom: var(--space-md);
-}
-
-.activity-header .section-subtext {
-  margin-bottom: 0;
-  margin-top: 0.35rem;
-}
-
-.activity-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-sm);
-}
-
-.activity-status {
-  min-height: 1.25rem;
-  font-size: 0.88rem;
-  color: var(--muted);
-  margin-bottom: 0.5rem;
-}
-
-.github-feed {
-  list-style: none;
-  margin: var(--space-sm) 0 0;
-  padding: 0;
-  display: grid;
-  gap: var(--space-sm);
-}
-
-.github-feed li {
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 0.85rem 1rem;
-  background: color-mix(in srgb, var(--card) 90%, transparent 10%);
-  display: grid;
-  gap: 0.35rem;
-}
-
-.github-feed-type {
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--accent) 55%, var(--muted) 45%);
-  font-weight: 700;
-}
-
-.github-feed-summary {
-  font-size: 0.95rem;
-  color: var(--text);
-}
-
-.github-feed-meta {
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
-.github-feed a {
-  color: color-mix(in srgb, var(--accent) 72%, var(--text) 28%);
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }
 
 .section-contact-cta .contact-wrap {
@@ -1676,7 +1588,6 @@ body.light-theme .hero-float-box {
 .hero-card,
 .project-card,
 .timeline-item,
-.edu-card,
 .contact-wrap,
 .about-list {
   position: relative;
@@ -1692,7 +1603,6 @@ body.light-theme .hero-float-box {
 .hero-card::before,
 .project-card::before,
 .timeline-item::before,
-.edu-card::before,
 .contact-wrap::before,
 .about-list::before {
   content: "";
@@ -1726,7 +1636,6 @@ body.light-theme .hero-float-box {
 .hero-card:hover::before,
 .project-card:hover::before,
 .timeline-item:hover::before,
-.edu-card:hover::before,
 .contact-wrap:hover::before,
 .about-list:hover::before {
   opacity: 1;
@@ -2293,146 +2202,6 @@ body.light-theme .project-links a:first-child:hover {
   box-shadow: 0 14px 26px color-mix(in srgb, var(--accent) 28%, transparent 72%);
 }
 
-.section-saas {
-  position: relative;
-}
-
-.section-saas::before {
-  content: "";
-  position: absolute;
-  inset: 8% 8% auto;
-  height: 40%;
-  pointer-events: none;
-  z-index: -1;
-  background: radial-gradient(ellipse 72% 58% at 50% 45%, rgba(62, 232, 214, 0.09), transparent 70%);
-  filter: blur(24px);
-}
-
-.saas-value-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-lg);
-}
-
-.saas-card,
-.saas-price-card,
-.faq-item {
-  border: 1px solid color-mix(in srgb, var(--border) 88%, transparent 12%);
-  border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--card) 95%, transparent 5%);
-  box-shadow: var(--shadow-card);
-}
-
-.saas-card {
-  padding: 1.15rem;
-}
-
-.saas-card h3 {
-  margin-bottom: 0.55rem;
-}
-
-.saas-bullets,
-.saas-feature-list {
-  margin-top: 0.8rem;
-  padding-left: 1.1rem;
-  color: var(--text);
-  display: grid;
-  gap: 0.45rem;
-}
-
-.saas-bullets li,
-.saas-feature-list li {
-  color: var(--muted);
-}
-
-.saas-pricing {
-  margin-top: var(--space-lg);
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-md);
-}
-
-.saas-price-card {
-  padding: 1.1rem;
-  display: grid;
-  gap: 0.55rem;
-}
-
-.saas-plan {
-  color: color-mix(in srgb, var(--accent) 62%, var(--muted) 38%);
-  font-size: 0.76rem;
-  text-transform: uppercase;
-  letter-spacing: 0.13em;
-  font-weight: 700;
-}
-
-.saas-price {
-  font-family: var(--font-display);
-  color: var(--text);
-  font-size: clamp(1.6rem, 3vw, 2rem);
-  line-height: 1.1;
-  letter-spacing: -0.03em;
-}
-
-.saas-price span {
-  font-size: 0.85rem;
-  letter-spacing: 0;
-  color: var(--muted);
-}
-
-.saas-plan-copy {
-  min-height: 2.8rem;
-}
-
-.saas-price-card-featured {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--border) 45%);
-  background: linear-gradient(
-    160deg,
-    color-mix(in srgb, var(--card) 82%, rgba(62, 232, 214, 0.16) 18%),
-    color-mix(in srgb, var(--card) 86%, rgba(34, 212, 238, 0.12) 14%)
-  );
-}
-
-.saas-faq {
-  margin-top: var(--space-xl);
-}
-
-.saas-faq h3 {
-  margin-bottom: 0.75rem;
-}
-
-.saas-faq .faq-item + .faq-item {
-  margin-top: 0.7rem;
-}
-
-.faq-question {
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: 0;
-  color: var(--text);
-  font: inherit;
-  font-weight: 600;
-  padding: 0.9rem 1rem;
-  cursor: pointer;
-}
-
-.faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height var(--ease), padding var(--ease);
-  padding: 0 1rem;
-}
-
-.faq-answer p {
-  padding-bottom: 1rem;
-}
-
-.faq-item.open .faq-answer {
-  max-height: 160px;
-  padding-top: 0.1rem;
-}
-
 #skills {
   position: relative;
 }
@@ -2791,8 +2560,7 @@ body.light-theme #experience .timeline-expand:hover {
   color: var(--accent);
 }
 
-.timeline-item,
-.edu-card {
+.timeline-item {
   padding: 1.05rem;
 }
 
@@ -2898,10 +2666,6 @@ body.light-theme #experience .timeline-expand:hover {
 
 body.light-theme #experience .timeline-logo-box {
   background: #fff;
-}
-
-.section-journey .edu-card + .edu-card {
-  margin-top: var(--space-md);
 }
 
 .timeline-meta {
@@ -3396,10 +3160,6 @@ body.light-theme a.contact-social-link:visited .contact-icon {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .saas-pricing {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
 }
 
 @media (max-width: 1160px) {
@@ -3467,8 +3227,7 @@ body.light-theme a.contact-social-link:visited .contact-icon {
   }
 
   .hero-simple,
-  .hero-grid,
-  .saas-value-grid {
+  .hero-grid {
     grid-template-columns: 1fr;
   }
 
@@ -3537,15 +3296,6 @@ body.light-theme a.contact-social-link:visited .contact-icon {
 
   #intro.hero--ref .hero-social {
     justify-content: flex-start;
-  }
-
-  .saas-pricing {
-    grid-template-columns: 1fr;
-  }
-
-  .activity-header {
-    flex-direction: column;
-    align-items: flex-start;
   }
 
   .contact-cta-actions {
