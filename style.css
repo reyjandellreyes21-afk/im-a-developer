@@ -2049,6 +2049,8 @@ body.light-theme .stack-chip-fallback {
 }
 
 .project-summary {
+  flex: 1 1 auto;
+  min-height: 0;
   margin-bottom: 0.72rem;
 }
 
@@ -2073,68 +2075,109 @@ body.light-theme .stack-chip-fallback {
 .project-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.95rem;
-  margin-bottom: 0.25rem;
+  align-items: center;
+  align-content: flex-end;
+  gap: 0.45rem 0.5rem;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .project-tags span {
   display: inline-flex;
   align-items: center;
   gap: 0.32rem;
+  min-height: 1.56rem;
   border-radius: 999px;
-  padding: 0.22rem 0.62rem;
+  padding: 0.2rem 0.58rem;
   border: 1px solid var(--border);
-  font-size: 0.76rem;
+  box-sizing: border-box;
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.15;
   color: var(--text);
 }
 
 .project-tags i {
-  font-size: 0.9rem;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.02rem;
+  height: 1.02rem;
+  min-width: 1.02rem;
+  min-height: 1.02rem;
+  max-width: 1.02rem;
+  max-height: 1.02rem;
+  aspect-ratio: 1 / 1;
+  font-size: 0.78rem;
   line-height: 1;
   flex-shrink: 0;
+  align-self: center;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 #projects .project-tags span {
   border-color: color-mix(in srgb, var(--accent) 42%, var(--border) 58%);
+  background: color-mix(in srgb, var(--card) 91%, var(--accent) 5%);
   color: color-mix(in srgb, var(--accent) 72%, var(--text) 28%);
 }
 
 body.light-theme #projects .project-tags span {
   border-color: color-mix(in srgb, var(--accent) 38%, var(--border) 62%);
+  background: color-mix(in srgb, var(--card) 94%, var(--accent) 4%);
   color: color-mix(in srgb, var(--accent) 55%, var(--text) 45%);
 }
 
-body:not(.light-theme) #projects .project-tags span.project-tag-icon-mono i[class*="devicon-"] {
+/* Unified toolkit icons: crisp monochrome glyphs */
+body:not(.light-theme) #projects .project-tags span i[class*="devicon-"] {
   filter: brightness(0) invert(1);
+  opacity: 0.93;
 }
 
-body.light-theme #projects .project-tags span.project-tag-icon-mono i[class*="devicon-"] {
+body.light-theme #projects .project-tags span i[class*="devicon-"] {
   filter: brightness(0);
+  opacity: 0.88;
 }
 
-#projects .project-tags span.project-tag-icon-mono .stack-chip-fallback {
-  min-width: 1.15rem;
-  height: 1.15rem;
-  font-size: 0.48rem;
+/* Letter-only stacks: square monogram, same footprint as Devicon box */
+#projects .project-tags .stack-chip-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 1.02rem;
+  height: 1.02rem;
+  min-width: 1.02rem;
+  min-height: 1.02rem;
+  max-width: 1.02rem;
+  max-height: 1.02rem;
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  margin: 0;
+  border-radius: 4px;
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
   border: none;
-  background: transparent;
+  color: inherit;
+  background: color-mix(in srgb, currentColor 14%, transparent 86%);
+  flex-shrink: 0;
+  align-self: center;
+  overflow: hidden;
 }
 
-body:not(.light-theme) #projects .project-tags span.project-tag-icon-mono .stack-chip-fallback {
-  color: #fff;
-}
-
-body.light-theme #projects .project-tags span.project-tag-icon-mono .stack-chip-fallback {
-  color: #000;
+body.light-theme #projects .project-tags .stack-chip-fallback {
+  background: color-mix(in srgb, currentColor 10%, transparent 90%);
 }
 
 .project-links {
-  margin-top: auto;
+  margin-top: 0;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-sm);
-  padding-top: 0.9rem;
+  padding-top: 0.75rem;
 }
 
 .project-links a {
